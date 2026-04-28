@@ -1,0 +1,58 @@
+--N1--
+SELECT *
+FROM empleado
+WHERE id_dep = 1; -- cambiar por el departamento que quieras
+
+--N2--
+SELECT e.nombre AS empleado,
+       e.apellidos,
+       j.nombre AS jefe,
+       d.nombre AS departamento
+FROM empleado e
+LEFT JOIN incidencias i ON e.dni = i.dni_empleado
+LEFT JOIN empleado j ON i.dni_responsable = j.dni
+LEFT JOIN departamento d ON e.id_dep = d.id_dep;
+
+--N3--
+SELECT j.nombre AS jefe,
+       j.apellidos AS jefe_apellidos,
+       e.nombre AS empleado,
+       e.apellidos AS empleado_apellidos
+FROM incidencias i
+JOIN empleado j ON i.dni_responsable = j.dni
+JOIN empleado e ON i.dni_empleado = e.dni;
+
+--N4--
+SELECT d.mac, d.modelo, COUNT(*) AS incidencias_pendientes
+FROM incidencias i
+JOIN dispositivos d ON i.dispositivo_afect = d.mac
+WHERE i.estado = 'pendiente'
+GROUP BY d.mac, d.modelo
+ORDER BY incidencias_pendientes DESC
+LIMIT 1;
+
+--N5--
+SELECT e.nombre, e.apellidos, COUNT(*) AS total
+FROM incidencias i
+JOIN empleado e ON i.dni_responsable = e.dni
+GROUP BY e.nombre, e.apellidos
+ORDER BY total DESC
+LIMIT 1;
+
+--N6--
+SELECT e.nombre, e.apellidos, COUNT(*) AS total
+FROM incidencias i
+JOIN empleado e ON i.dni_empleado = e.dni
+GROUP BY e.nombre, e.apellidos
+ORDER BY total DESC
+LIMIT 1;
+
+--N7--
+SELECT *
+FROM dispositivos d
+WHERE d.mac NOT IN (
+    SELECT dispositivo_afect
+    FROM incidencias
+);
+
+
