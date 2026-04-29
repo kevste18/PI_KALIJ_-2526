@@ -108,7 +108,7 @@ public class EmpleadoDAO {
 
                 Date fecha = rs.getDate("fecha_contrato");
                 if (fecha != null) {
-                    e.setFechaContrato(fecha.toLocalDate()); // si usas LocalDate
+                    e.setFechaContrato(fecha.toLocalDate());
                 }
 
                 e.setSalario(rs.getDouble("salario"));
