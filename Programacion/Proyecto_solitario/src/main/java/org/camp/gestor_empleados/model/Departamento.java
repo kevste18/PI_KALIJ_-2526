@@ -10,11 +10,12 @@ public class Departamento {
 
     // Constructores
 
-    public Departamento(int idDep, String nombre, double presupuesto, Ubicacion ubicacion) {
+    public Departamento(int idDep, String nombre, double presupuesto, Ubicacion ubicacion, Direccion direccion) {
         this.idDep = idDep;
         this.nombre = nombre;
         this.presupuesto = presupuesto;
         this.ubicacion = ubicacion;
+        this.direccion = direccion;
     }
 
     // Setters y getters
@@ -25,6 +26,8 @@ public class Departamento {
     public void setNombre(String nombre) {this.nombre = nombre;}
     public double getPresupuesto() {return this.presupuesto;}
     public void setPresupuesto(double presupuesto) {this.presupuesto = presupuesto;}
-    public int getUbicacion() {return this.ubicacion;}
-    public void setUbicacion(int ubicacion) {this.ubicacion = ubicacion;}
+    public Ubicacion getUbicacion() {return this.ubicacion;}
+    public void setUbicacion(Ubicacion ubicacion) {this.ubicacion = ubicacion;}
+    public Direccion getDireccion() {return this.direccion;}
+    public void setDireccion(Direccion direccion) {this.direccion = direccion;}
 }
