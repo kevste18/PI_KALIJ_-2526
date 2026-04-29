@@ -1,4 +1,134 @@
 package org.camp.gestor_empleados.database;
 
+import org.camp.gestor_empleados.model.Departamento;
+import org.camp.gestor_empleados.model.Empleado;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+
 public class EmpleadoDAO {
+    private Connection con = ConexionBD.conectar();
+    public boolean insertarCompleto (Empleado empleado) {
+        String sql = "INSERT INTO empleado (dni, nombre, apellidos, fecha_contrato, salario, teletrabajo, tlf, tlf_trabajo, id_dep," +
+                " id_rol, dispositivo_asignado, num_dirige, num_gestiona, id_empleado )" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, empleado.getDni());
+            ps.setString(2, empleado.getNombre());
+            ps.setString(3, empleado.getApellido());
+            ps.setDate(4, java.sql.Date.valueOf(empleado.getFechaContrato())); // LocalDate → Date
+            ps.setDouble(5, empleado.getSalario());
+            ps.setBoolean(6, empleado.getTeletrabajo());
+            ps.setString(7, empleado.getTelefono());
+            ps.setString(8, empleado.getTlfTrabajo());
+            ps.setInt(9, empleado.getIdDep());
+            ps.setInt(10, empleado.getIdRol());
+            ps.setString(11, empleado.getDispositivoAsignado());
+            ps.setInt(12, empleado.getNumDirige());
+            ps.setInt(13, empleado.getNumGestiona());
+            ps.setInt(14, empleado.getIdEmpleado());
+
+            int filas = ps.executeUpdate();
+            return filas > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean insertar(Empleado empleado) {
+        String sql = "INSERT INTO empleado (dni, nombre, apellidos, fecha_contrato, salario, id_empleado, id_rol) VALUES (?,?,?,?,?,?,?)";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, empleado.getDni());
+            ps.setString(2, empleado.getNombre());
+            ps.setString(3, empleado.getApellido());
+            ps.setDate(4, java.sql.Date.valueOf(empleado.getFechaContrato())); // si usas LocalDate
+            ps.setDouble(5, empleado.getSalario());
+            ps.setInt(6, empleado.getIdEmpleado());
+            ps.setInt(7, empleado.getIdRol());
+
+            int filas = ps.executeUpdate();
+            return filas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public ArrayList<Empleado> obtenerMinimo() {
+        ArrayList<Empleado> lista = new ArrayList<>();
+
+        String sql = "SELECT dni, nombre, apellidos, fecha_contrato, salario, id_empleado, id_rol FROM empleado";
+
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Empleado e = new Empleado();
+
+                e.setDni(rs.getString("dni"));
+                e.setNombre(rs.getString("nombre"));
+                e.setApellido(rs.getString("apellidos"));
+                e.setFechaContrato(rs.getDate("fecha_contrato").toLocalDate()); // si usas LocalDate
+                e.setSalario(rs.getDouble("salario"));
+                e.setIdEmpleado(rs.getInt("id_empleado"));
+                e.setIdRol(rs.getInt("id_rol"));
+
+                lista.add(e);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    public ArrayList<Empleado> obtenerTodos() {
+        ArrayList<Empleado> lista = new ArrayList<>();
+
+        String sql = "SELECT dni, nombre, apellidos, fecha_contrato, salario, teletrabajo, tlf, tlf_trabajo, id_dep, " +
+                "id_rol, dispositivo_asignado, num_dirige, num_gestiona, id_empleado FROM empleado";
+
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Empleado e = new Empleado();
+
+                e.setDni(rs.getString("dni"));
+                e.setNombre(rs.getString("nombre"));
+                e.setApellido(rs.getString("apellidos"));
+
+                Date fecha = rs.getDate("fecha_contrato");
+                if (fecha != null) {
+                    e.setFechaContrato(fecha.toLocalDate()); // si usas LocalDate
+                }
+
+                e.setSalario(rs.getDouble("salario"));
+                e.setTeletrabajo(rs.getBoolean("teletrabajo"));
+                e.setTelefono(rs.getString("tlf"));
+                e.setTlfTrabajo(rs.getString("tlf_trabajo"));
+                e.setIdDep(rs.getInt("id_dep"));
+                e.setIdRol(rs.getInt("id_rol"));
+                e.setDispositivoAsignado(rs.getString("dispositivo_asignado"));
+                e.setNumDirige(rs.getInt("num_dirige"));
+                e.setNumGestiona(rs.getInt("num_gestiona"));
+                e.setIdEmpleado(rs.getInt("id_empleado"));
+
+                lista.add(e);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
 }
