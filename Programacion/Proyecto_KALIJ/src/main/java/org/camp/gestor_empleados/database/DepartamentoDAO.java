@@ -18,7 +18,7 @@ public class DepartamentoDAO {
             ps.setInt(1, departamento.getId_dep());
             ps.setString(2, departamento.getNombre());
             ps.setDouble(3, departamento.getPresupuesto());
-            ps.setString(4, departamento.getUbicacion());
+            ps.setString(4, String.valueOf(departamento.getIdUbi()));
 
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;
@@ -44,7 +44,7 @@ public class DepartamentoDAO {
                 d.setId_dep(rs.getInt("id_dep"));
                 d.setNombre(rs.getString("nombre"));
                 d.setPresupuesto(rs.getDouble("presupuesto"));
-                d.setUbicacion(rs.getString("ubicacion"));
+                d.setIdUbi(Integer.parseInt(rs.getString("ubicacion")));
 
                 lista.add(d);
             }
@@ -64,7 +64,7 @@ public class DepartamentoDAO {
 
             ps.setString(1, departamento.getNombre());
             ps.setDouble(2, departamento.getPresupuesto());
-            ps.setString(3, departamento.getUbicacion());
+            ps.setString(3, String.valueOf(departamento.getIdUbi()));
             ps.setInt(4, departamento.getId_dep());
 
             int filasAfectadas = ps.executeUpdate();

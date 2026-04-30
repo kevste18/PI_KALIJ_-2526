@@ -26,8 +26,8 @@ public class EmpleadoDAO {
             ps.setDouble(5, empleado.getSalario());
             ps.setBoolean(6, empleado.getTeletrabajo());
             ps.setString(7, empleado.getTelefono());
-            ps.setString(8, empleado.getTlfTrabajo());
-            ps.setInt(9, empleado.getIdDep());
+            ps.setString(8, empleado.getTelefonoTrabajo());
+            ps.setInt(9, empleado.getIdDepartamento());
             ps.setInt(10, empleado.getIdRol());
             ps.setString(11, empleado.getDispositivoAsignado());
             ps.setInt(12, empleado.getNumDirige());
@@ -108,14 +108,14 @@ public class EmpleadoDAO {
 
                 Date fecha = rs.getDate("fecha_contrato");
                 if (fecha != null) {
-                    e.setFechaContrato(fecha.toLocalDate());
+                    e.setFechaContrato(((java.sql.Date) fecha).toLocalDate());
                 }
 
                 e.setSalario(rs.getDouble("salario"));
                 e.setTeletrabajo(rs.getBoolean("teletrabajo"));
                 e.setTelefono(rs.getString("tlf"));
-                e.setTlfTrabajo(rs.getString("tlf_trabajo"));
-                e.setIdDep(rs.getInt("id_dep"));
+                e.setTelefonoTrabajo(rs.getString("tlf_trabajo"));
+                e.setIdDepartamento(rs.getInt("id_dep"));
                 e.setIdRol(rs.getInt("id_rol"));
                 e.setDispositivoAsignado(rs.getString("dispositivo_asignado"));
                 e.setNumDirige(rs.getInt("num_dirige"));
@@ -130,5 +130,37 @@ public class EmpleadoDAO {
         }
 
         return lista;
+    }
+
+    public boolean actualizar(Departamento departamento) {
+        String sql = "UPDATE departamento SET nombre = ?, presupuesto = ?, ubicacion = ? WHERE id_dep = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, departamento.getNombre());
+            ps.setDouble(2, departamento.getPresupuesto());
+            ps.setInt(3, departamento.getIdUbi());
+            ps.setInt(4, departamento.getId_dep());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean eliminar(int id_dep) {
+        String sql = "DELETE FROM departamento WHERE id_dep = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id_dep);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
