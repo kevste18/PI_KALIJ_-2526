@@ -2,17 +2,16 @@ package org.camp.gestor_empleados.database;
 
 import org.camp.gestor_empleados.model.Departamento;
 import org.camp.gestor_empleados.model.Empleado;
+import org.camp.gestor_empleados.model.Usuario;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class EmpleadoDAO {
-    private Connection con = ConexionBD.conectar();
-    public boolean insertarCompleto (Empleado empleado) {
+    private static Connection con = ConexionBD.conectar();
+
+    public boolean insertarCompleto(Empleado empleado) {
         String sql = "INSERT INTO empleado (dni, nombre, apellidos, fecha_contrato, salario, teletrabajo, tlf, tlf_trabajo, id_dep," +
                 " id_rol, dispositivo_asignado, num_dirige, num_gestiona, id_empleado )" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -40,6 +39,7 @@ public class EmpleadoDAO {
             throw new RuntimeException(e);
         }
     }
+
     public boolean insertar(Empleado empleado) {
         String sql = "INSERT INTO empleado (dni, nombre, apellidos, fecha_contrato, salario, id_empleado, id_rol) VALUES (?,?,?,?,?,?,?)";
 
@@ -61,6 +61,7 @@ public class EmpleadoDAO {
             return false;
         }
     }
+
     public ArrayList<Empleado> obtenerMinimo() {
         ArrayList<Empleado> lista = new ArrayList<>();
 
@@ -130,6 +131,46 @@ public class EmpleadoDAO {
         }
 
         return lista;
+    }
+
+    public enum ResultadoLogin {
+        USUARIO_NO_EXISTE,
+        PASSWORD_INCORRECTA,
+        LOGIN_CORRECTO
+    }
+
+    public static ResultadoLogin verificarUsuario(String dni, String password) {
+
+        if (dni == null || dni.isEmpty() || password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("DNI y contraseña obligatorios");
+        }
+
+        String sql = "SELECT password FROM departamento WHERE dni = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, dni);
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                // No existe el DNI
+                return ResultadoLogin.USUARIO_NO_EXISTE;
+            }
+
+            String passwordBD = rs.getString("password");
+
+            if (!passwordBD.equals(password)) {
+                // Existe el usuario pero contraseña incorrecta
+                return ResultadoLogin.PASSWORD_INCORRECTA;
+            }
+
+            return ResultadoLogin.LOGIN_CORRECTO;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResultadoLogin.USUARIO_NO_EXISTE;
     }
 
     public boolean actualizar(Departamento departamento) {
