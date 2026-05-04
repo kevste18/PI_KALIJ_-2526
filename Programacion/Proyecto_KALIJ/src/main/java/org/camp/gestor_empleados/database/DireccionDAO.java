@@ -20,7 +20,7 @@ public class DireccionDAO {
             ps.setString(2, direccion.getCalle());
             ps.setString(3, direccion.getDespacho());
             ps.setString(4, String.valueOf(direccion.getCodigoPostal()));
-            ps.setInt(5, Integer.parseInt(direccion.getNumeroCalle()));
+            ps.setInt(5, Integer.parseInt(String.valueOf(direccion.getNumeroCalle())));
 
             return ps.executeUpdate() > 0;
 
@@ -65,7 +65,7 @@ public class DireccionDAO {
             ps.setString(1, direccion.getCalle());
             ps.setString(2, direccion.getDespacho());
             ps.setString(3, String.valueOf(direccion.getCodigoPostal()));
-            ps.setInt(4, Integer.parseInt(direccion.getNumeroCalle()));
+            ps.setInt(4, Integer.parseInt(String.valueOf(direccion.getNumeroCalle())));
             ps.setInt(5, direccion.getIdDir());
 
             return ps.executeUpdate() > 0;
@@ -116,4 +116,4 @@ public class DireccionDAO {
         return d;
     }
 }
-}
+
