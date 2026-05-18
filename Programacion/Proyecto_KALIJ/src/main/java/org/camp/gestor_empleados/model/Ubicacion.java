@@ -12,7 +12,7 @@ public class Ubicacion {
     private int numeroCalle;
 
     // Constructor
-    public Ubicacion (int idUbi,int codigoPostal, String edificio, String planta, String calle, String despacho, int numeroCalle ) {
+    public Ubicacion (int idUbi, String edificio, String planta, String calle, int numeroCalle ) {
         this.idUbi = idUbi;
         this.codigoPostal = codigoPostal;
         this.edificio = edificio;

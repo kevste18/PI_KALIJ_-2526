@@ -8,6 +8,9 @@ public class Departamento {
         private int idUbi;
 
         // Constructores
+        public Departamento(){
+
+        }
 
         public Departamento(int idDep, String nombre, double presupuesto, int idUbi) {
             this.idDep = idDep;
