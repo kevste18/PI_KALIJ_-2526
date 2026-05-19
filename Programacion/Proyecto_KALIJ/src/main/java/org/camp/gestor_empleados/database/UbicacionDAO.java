@@ -2,17 +2,14 @@ package org.camp.gestor_empleados.database;
 
 import org.camp.gestor_empleados.model.Ubicacion;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UbicacionDAO {
-    private Connection con = ConexionBD.conectar();
 
     public void insertar(Ubicacion u) {
+
         String sql = "INSERT INTO ubicacion (cod, edificio, planta, departamento, id_dir) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection con = ConexionBD.conectar();
@@ -21,7 +18,7 @@ public class UbicacionDAO {
             ps.setInt(1, u.getIdUbi());
             ps.setString(2, u.getEdificio());
             ps.setString(3, u.getPlanta());
-            ps.setString(4, String.valueOf(u.getIdDir()));
+            ps.setString(4, u.getDespacho()); // ← antes estaba MAL usado
             ps.setInt(5, u.getIdDir());
 
             ps.executeUpdate();
@@ -31,48 +28,58 @@ public class UbicacionDAO {
         }
     }
 
-    // READ (uno por ID)
     public Ubicacion obtenerPorId(int cod) {
-        String sql = "SELECT cod, edificio, planta, departamento, id_dir FROM ubicacion WHERE cod = ?";        Ubicacion u = null;
+
+        String sql = "SELECT cod, edificio, planta, departamento, id_dir FROM ubicacion WHERE cod = ?";
 
         try (Connection con = ConexionBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, cod);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                u = new Ubicacion(
-                        rs.getInt("cod"),
-                        rs.getString("edificio"),
-                        rs.getString("planta"),
-                        rs.getString("departamento"),
-                        rs.getInt("id_dir")
-                );
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    Ubicacion u = new Ubicacion();
+
+                    u.setIdUbi(rs.getInt("cod"));
+                    u.setEdificio(rs.getString("edificio"));
+                    u.setPlanta(rs.getString("planta"));
+                    u.setDespacho(rs.getString("departamento"));
+                    u.setIdDir(rs.getInt("id_dir"));
+
+                    return u;
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return u;
+        return null;
     }
 
     public List<Ubicacion> listar() {
+
         List<Ubicacion> lista = new ArrayList<>();
+
         String sql = "SELECT cod, edificio, planta, departamento, id_dir FROM ubicacion";
+
         try (Connection con = ConexionBD.conectar();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Ubicacion u = new Ubicacion(
-                        rs.getInt("cod"),
-                        rs.getString("edificio"),
-                        rs.getString("planta"),
-                        rs.getString("departamento"),
-                        rs.getInt("id_dir")
-                );
+
+                Ubicacion u = new Ubicacion();
+
+                u.setIdUbi(rs.getInt("cod"));
+                u.setEdificio(rs.getString("edificio"));
+                u.setPlanta(rs.getString("planta"));
+                u.setDespacho(rs.getString("departamento"));
+                u.setIdDir(rs.getInt("id_dir"));
+
                 lista.add(u);
             }
 
@@ -84,6 +91,7 @@ public class UbicacionDAO {
     }
 
     public void actualizar(Ubicacion u) {
+
         String sql = "UPDATE ubicacion SET edificio=?, planta=?, departamento=?, id_dir=? WHERE cod=?";
 
         try (Connection con = ConexionBD.conectar();
@@ -91,7 +99,7 @@ public class UbicacionDAO {
 
             ps.setString(1, u.getEdificio());
             ps.setString(2, u.getPlanta());
-            ps.setString(3, String.valueOf(u.getIdDir()));
+            ps.setString(3, u.getDespacho());
             ps.setInt(4, u.getIdDir());
             ps.setInt(5, u.getIdUbi());
 
@@ -102,8 +110,8 @@ public class UbicacionDAO {
         }
     }
 
-
     public void eliminar(int cod) {
+
         String sql = "DELETE FROM ubicacion WHERE cod = ?";
 
         try (Connection con = ConexionBD.conectar();

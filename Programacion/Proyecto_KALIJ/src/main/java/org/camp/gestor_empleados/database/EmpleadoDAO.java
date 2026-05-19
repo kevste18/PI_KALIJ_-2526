@@ -132,8 +132,6 @@ public class EmpleadoDAO {
         return lista;
     }
 
-<<<<<<< Updated upstream
-=======
     public enum ResultadoLogin {
         USUARIO_NO_EXISTE,
         PASSWORD_INCORRECTA,
@@ -141,6 +139,7 @@ public class EmpleadoDAO {
     }
 
     public static ResultadoLogin verificarUsuario(String dni, String password) {
+        Connection con = ConexionBD.conectar();
 
         if (dni == null || dni.isEmpty() || password == null || password.isEmpty()) {
             throw new IllegalArgumentException("DNI y contraseña obligatorios");
@@ -221,8 +220,6 @@ public class EmpleadoDAO {
 
         return null;
     }
-
->>>>>>> Stashed changes
     public boolean actualizar(Departamento departamento) {
         String sql = "UPDATE departamento SET nombre = ?, presupuesto = ?, ubicacion = ? WHERE id_dep = ?";
 
