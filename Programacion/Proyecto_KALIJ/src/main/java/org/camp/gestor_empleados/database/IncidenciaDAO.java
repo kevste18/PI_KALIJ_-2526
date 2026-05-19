@@ -2,10 +2,7 @@ package org.camp.gestor_empleados.database;
 
 import org.camp.gestor_empleados.model.Incidencia;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +56,59 @@ public class IncidenciaDAO {
         }
 
         return lista;
+    }
+
+    public ArrayList<Incidencia> getIncidenciasPorResponsable(String dniResponsable) throws SQLException {
+
+        String sql = "SELECT * FROM incidencias WHERE dni_responsable = ?";
+
+        ArrayList<Incidencia> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, dniResponsable);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapResultSet(rs));
+                }
+            }
+        }
+
+        return lista;
+    }
+
+    public ArrayList<Incidencia> getIncidenciasPorEmpleado(String dniEmpleado) throws SQLException {
+
+        String sql = "SELECT * FROM incidencias WHERE dni_empleado = ?";
+
+        ArrayList<Incidencia> lista = new ArrayList<>();
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, dniEmpleado);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapResultSet(rs));
+                }
+            }
+        }
+
+        return lista;
+    }
+
+    private Incidencia mapResultSet(ResultSet rs) throws SQLException {
+
+        Incidencia i = new Incidencia();
+
+        i.setNumIncidencia(rs.getInt("num_incidencia"));
+        i.setEstado(rs.getString("estado"));
+        i.setDniEmpleado(rs.getString("dni_empleado"));
+        i.setDniResponsable(rs.getString("dni_responsable"));
+        i.setFechaAlta(rs.getDate("fecha_alta"));
+        i.setFechaResolucion(rs.getDate("fecha_resolucion"));
+        i.setDispositivoAfect(rs.getString("dispositivo_afect"));
+
+        return i;
     }
 
     public void actualizar(Incidencia i) {
