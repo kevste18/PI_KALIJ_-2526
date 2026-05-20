@@ -8,8 +8,6 @@ import java.util.List;
 
 public class DispositivoDAO {
 
-    private Connection con = ConexionBD.conectar();
-
     // CREATE
     public boolean insertar(Dispositivo d) {
 
@@ -17,7 +15,8 @@ public class DispositivoDAO {
                 "(mac, ip, modelo, sistema_operativo, id_dispo) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConexionBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, d.getMac());
             ps.setString(2, d.getIp());
@@ -38,7 +37,8 @@ public class DispositivoDAO {
 
         String sql = "SELECT * FROM dispositivo WHERE mac = ?";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConexionBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, mac);
 
@@ -46,13 +46,15 @@ public class DispositivoDAO {
 
                 if (rs.next()) {
 
-                    return new Dispositivo(
-                            rs.getString("mac"),
-                            rs.getString("ip"),
-                            rs.getString("modelo"),
-                            rs.getString("sistema_operativo"),
-                            rs.getString("id_dispo")
-                    );
+                    Dispositivo d = new Dispositivo();
+
+                    d.setMac(rs.getString("mac"));
+                    d.setIp(rs.getString("ip"));
+                    d.setModelo(rs.getString("modelo"));
+                    d.setSistemaOperativo(rs.getString("sistema_operativo"));
+                    d.setIdDispo(rs.getString("id_dispo"));
+
+                    return d;
                 }
             }
 
@@ -70,18 +72,19 @@ public class DispositivoDAO {
 
         String sql = "SELECT * FROM dispositivo";
 
-        try (Statement st = con.createStatement();
+        try (Connection con = ConexionBD.conectar();
+             Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
 
-                Dispositivo d = new Dispositivo(
-                        rs.getString("mac"),
-                        rs.getString("ip"),
-                        rs.getString("modelo"),
-                        rs.getString("sistema_operativo"),
-                        rs.getString("id_dispo")
-                );
+                Dispositivo d = new Dispositivo();
+
+                d.setMac(rs.getString("mac"));
+                d.setIp(rs.getString("ip"));
+                d.setModelo(rs.getString("modelo"));
+                d.setSistemaOperativo(rs.getString("sistema_operativo"));
+                d.setIdDispo(rs.getString("id_dispo"));
 
                 lista.add(d);
             }
@@ -100,7 +103,8 @@ public class DispositivoDAO {
                 "SET ip = ?, modelo = ?, sistema_operativo = ?, id_dispo = ? " +
                 "WHERE mac = ?";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConexionBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, d.getIp());
             ps.setString(2, d.getModelo());
@@ -121,7 +125,8 @@ public class DispositivoDAO {
 
         String sql = "DELETE FROM dispositivo WHERE mac = ?";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConexionBD.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, mac);
 

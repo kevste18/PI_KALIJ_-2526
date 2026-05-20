@@ -11,36 +11,32 @@ public class Ubicacion {
     private String despacho;
     private int numeroCalle;
 
-    public Ubicacion() {
-    }
-
-    public Ubicacion(int idUbi, int codigoPostal, String edificio, String planta, int idDir, String calle, String despacho, int numeroCalle) {
+    // Constructor
+    public Ubicacion (int idUbi, String edificio, String planta, String calle, int numeroCalle ) {
         this.idUbi = idUbi;
         this.codigoPostal = codigoPostal;
         this.edificio = edificio;
         this.planta = planta;
-        this.idDir = idDir;
         this.calle = calle;
         this.despacho = despacho;
         this.numeroCalle = numeroCalle;
     }
 
-    // Getters y Setters
-
-    public int getIdUbi() {return idUbi;}
+    // Getters y setters
+    public int getIdUbi() {return this.idUbi;}
     public void setIdUbi(int idUbi) {this.idUbi = idUbi;}
-    public int getCodigoPostal() {return codigoPostal;}
+    public int getCodigoPostal() {return this.codigoPostal;}
     public void setCodigoPostal(int codigoPostal) {this.codigoPostal = codigoPostal;}
-    public String getEdificio() {return edificio;}
+    public String getEdificio() {return this.edificio;}
     public void setEdificio(String edificio) {this.edificio = edificio;}
-    public String getPlanta() {return planta;}
+    public String getPlanta() {return this.planta;}
     public void setPlanta(String planta) {this.planta = planta;}
-    public int getIdDir() {return idDir;}
-    public void setIdDir(int idDir) {this.idDir = idDir;}
-    public String getCalle() {return calle;}
+    public int getIdDir() {return this.idDir;}
+    public void setIdDir(int id_dir) {this.idDir = idDir;}
+    public String getCalle() {return this.calle;}
     public void setCalle(String calle) {this.calle = calle;}
-    public String getDespacho() {return despacho;}
+    public String getDespacho() {return this.despacho;}
     public void setDespacho(String despacho) {this.despacho = despacho;}
-    public int getNumeroCalle() {return numeroCalle;}
+    public int getNumeroCalle() {return this.numeroCalle;}
     public void setNumeroCalle(int numeroCalle) {this.numeroCalle = numeroCalle;}
 }

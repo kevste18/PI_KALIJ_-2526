@@ -2,17 +2,16 @@ package org.camp.gestor_empleados.database;
 
 import org.camp.gestor_empleados.model.Departamento;
 import org.camp.gestor_empleados.model.Empleado;
+import org.camp.gestor_empleados.model.Usuario;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class EmpleadoDAO {
-    private Connection con = ConexionBD.conectar();
-    public boolean insertarCompleto (Empleado empleado) {
+    private static Connection con = ConexionBD.conectar();
+
+    public boolean insertarCompleto(Empleado empleado) {
         String sql = "INSERT INTO empleado (dni, nombre, apellidos, fecha_contrato, salario, teletrabajo, tlf, tlf_trabajo, id_dep," +
                 " id_rol, dispositivo_asignado, num_dirige, num_gestiona, id_empleado )" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -40,6 +39,7 @@ public class EmpleadoDAO {
             throw new RuntimeException(e);
         }
     }
+
     public boolean insertar(Empleado empleado) {
         String sql = "INSERT INTO empleado (dni, nombre, apellidos, fecha_contrato, salario, id_empleado, id_rol) VALUES (?,?,?,?,?,?,?)";
 
@@ -61,6 +61,7 @@ public class EmpleadoDAO {
             return false;
         }
     }
+
     public ArrayList<Empleado> obtenerMinimo() {
         ArrayList<Empleado> lista = new ArrayList<>();
 
@@ -139,7 +140,6 @@ public class EmpleadoDAO {
     }
 
     public static ResultadoLogin verificarUsuario(String dni, String password) {
-        Connection con = ConexionBD.conectar();
 
         if (dni == null || dni.isEmpty() || password == null || password.isEmpty()) {
             throw new IllegalArgumentException("DNI y contraseña obligatorios");
@@ -220,6 +220,7 @@ public class EmpleadoDAO {
 
         return null;
     }
+
     public boolean actualizar(Departamento departamento) {
         String sql = "UPDATE departamento SET nombre = ?, presupuesto = ?, ubicacion = ? WHERE id_dep = ?";
 
